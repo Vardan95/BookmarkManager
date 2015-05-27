@@ -2,6 +2,7 @@ package com.example.android.bookmarkmanager;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,8 @@ public class MainActivity extends ActionBarActivity {
     private BookMarkListAdapter bk_adapter;
     private ListView bookmark_list;
 
+    private Intent details;
+
     private int currentCategoryID;
 
     private ArrayList<SimpleBookmarkCategory> categories_;
@@ -35,6 +38,7 @@ public class MainActivity extends ActionBarActivity {
             bookmark_list.setAdapter(bk_adapter);
             bk_adapter.notifyDataSetChanged();
 
+            bookmark_list.setOnItemClickListener(bookmark_list_click_listener);
             bookmark_list.setOnItemLongClickListener(bookmark_List_listener);
         }
     };
@@ -49,9 +53,50 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
+    @Override
+    protected void onResume() {
+
+        if(!categories_.isEmpty()) {
+            currentCategoryID = categories_.get(0).getId_();
+        }
+
+        bk_adapter = new BookMarkListAdapter(getApplicationContext(),db.getBookmarkWithParentID(currentCategoryID));
+        bookmark_list.setAdapter(bk_adapter);
+        bk_adapter.notifyDataSetChanged();
+        bookmark_list.setOnItemClickListener(bookmark_list_click_listener);
+        bookmark_list.setOnItemLongClickListener(bookmark_List_listener);
+
+        super.onResume();
+    }
+
+    private ListView.OnItemClickListener bookmark_list_click_listener = new ListView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            SimpleBookmarkEntry entry = (SimpleBookmarkEntry)bk_adapter.getItem(position);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(DatabaseHandler.KEY_TITLE, entry.getTitle_());
+            bundle.putString(DatabaseHandler.KEY_URL, entry.getUrl_());
+            bundle.putLong(DatabaseHandler.KEY_ADDED_TIME, entry.getTime_());
+            bundle.putLong(DatabaseHandler.KEY_SCHEDULED_TIME, entry.getScheduleTime());
+            bundle.putBoolean(DatabaseHandler.KEY_IS_SCHEDULED, entry.isScheduled());
+            bundle.putInt(DatabaseHandler.KEY_PRIORITY, entry.getPriority());
+
+            details.putExtras(bundle);
+
+            startActivity(details);
+        }
+    };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(savedInstanceState != null)
+        {
+            currentCategoryID = savedInstanceState.getInt(CATEGORYID_TAG);
+        }
 
         categories_ = new ArrayList<SimpleBookmarkCategory>();
 
@@ -69,6 +114,8 @@ public class MainActivity extends ActionBarActivity {
         list_adapter.notifyDataSetChanged();
 
         cat_list.setOnItemClickListener(category_List_listener);
+
+        details = new Intent(this,DetailsActivity.class);
     }
 
     @Override
@@ -104,4 +151,12 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putInt(CATEGORYID_TAG,currentCategoryID);
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    private static final String CATEGORYID_TAG = "CATEGORYID";
 }

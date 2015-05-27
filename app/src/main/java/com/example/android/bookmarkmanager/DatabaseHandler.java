@@ -319,7 +319,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[] { String.valueOf(addedTime) });
     }
 
-    public int updateBookmarkEntry(Long addedTime,Byte priority) {
+    public int updateBookmarkEntry(Long addedTime,int priority) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -339,14 +339,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_BOOKMARKS = "bookmarks";
 
     //Categories Table columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_URL = "url";
-    private static final String KEY_MODIFIED_TIME = "dateGroupModified";
-    private static final String KEY_ADDED_TIME = "dateAdded";
-    private static final String KEY_INDEX = "itemIndex";
-    private static final String KEY_PARENT_ID = "parentId";
-    private static final String KEY_PRIORITY = "priority";
-    private static final String KEY_SCHEDULED_TIME = "scheduled";
-    private static final String KEY_IS_SCHEDULED = "isscheduled";
+    protected static final String KEY_ID = "id";
+    protected static final String KEY_TITLE = "title";
+    protected static final String KEY_URL = "url";
+    protected static final String KEY_MODIFIED_TIME = "dateGroupModified";
+    protected static final String KEY_ADDED_TIME = "dateAdded";
+    protected static final String KEY_INDEX = "itemIndex";
+    protected static final String KEY_PARENT_ID = "parentId";
+    protected static final String KEY_PRIORITY = "priority";
+    protected static final String KEY_SCHEDULED_TIME = "scheduled";
+    protected static final String KEY_IS_SCHEDULED = "isscheduled";
 }

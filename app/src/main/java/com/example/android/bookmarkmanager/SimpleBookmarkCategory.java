@@ -1,7 +1,5 @@
 package com.example.android.bookmarkmanager;
 
-//TODO general change all time string into time type
-
 import java.util.HashMap;
 import java.util.Map;
 

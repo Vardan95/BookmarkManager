@@ -16,4 +16,11 @@ public  class TimeUtils {
         SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
         return shortenedDateFormat.format(time);
     }
+
+    public static String getReadableTimeString(long time){
+        // Because the API returns a unix timestamp (measured in seconds),
+        // it must be converted to milliseconds in order to be converted to valid date.
+        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("h:mm ");
+        return shortenedDateFormat.format(time);
+    }
 }

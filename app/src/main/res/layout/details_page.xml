@@ -8,14 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:id="@+id/">
+        android:id="@+id/bookmark_details_title_layout">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Title"
-            android:id="@+id/bookmark_details_title" />
+            android:id="@+id/bookmark_details_title"
+            android:maxLines="2" />
     </LinearLayout>
 
     <LinearLayout
@@ -57,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:text="Open"
-                android:id="@+id/button" />
+                android:id="@+id/bookmark_details_open_url" />
         </LinearLayout>
 
     </LinearLayout>
@@ -108,7 +109,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Pirority :"
-            android:id="@+id/textView"
+            android:id="@+id/bookmark_details_priority_static"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp" />
 
@@ -125,7 +126,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/">
+        android:id="@+id/bookmark_details_shday_layout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -149,7 +150,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/"
+            android:id="@+id/bookmark_details_change_day_layout"
             android:gravity="right">
 
             <Button
@@ -171,7 +172,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Scheduled time:"
-            android:id="@+id/textView3"
+            android:id="@+id/bookmark_details_sch_time_static"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center" />
 

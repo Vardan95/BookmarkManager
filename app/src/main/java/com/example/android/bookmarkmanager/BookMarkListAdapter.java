@@ -99,12 +99,15 @@ public class BookMarkListAdapter extends BaseAdapter {
                 {
                     case BookmarkPriority.HIGH_PRIOR : {
                         prior_image.setImageResource(R.drawable.high_pr);
+                        break;
                     }
                     case BookmarkPriority.NORM_PRIOR : {
                         prior_image.setImageResource(R.drawable.normal_pr);
+                        break;
                     }
                     case BookmarkPriority.LOW_PRIOR : {
                         prior_image.setImageResource(R.drawable.low_pr);
+                        break;
                     }
                 }
             }

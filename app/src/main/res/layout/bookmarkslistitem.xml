@@ -4,17 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Title"
-        android:id="@+id/bookmark_item_title_id"
-        android:maxLength="100"
-        android:layout_gravity="center_horizontal"
-        android:textColor="#ff8b7e88"
-        android:maxLines="1"
-        android:gravity="center_vertical|center_horizontal" />
+        android:gravity="center_vertical|center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Title"
+            android:id="@+id/bookmark_item_title_id"
+            android:maxLength="100"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ff8b7e88"
+            android:maxLines="1"
+            android:gravity="center_vertical|center_horizontal" />
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -110,4 +117,5 @@
         </LinearLayout>
 
     </LinearLayout>
+
 </LinearLayout>
