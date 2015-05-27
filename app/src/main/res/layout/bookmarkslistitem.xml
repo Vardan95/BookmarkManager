@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Title"
+        android:id="@+id/bookmark_item_title_id"
+        android:maxLength="100"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#ff8b7e88"
+        android:maxLines="1"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bookmark_item_priority_image"
+            android:src="@drawable/normal_pr" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="URL:"
+            android:id="@+id/bookmark_item_url_static_id"
+            android:layout_marginLeft="10dp"
+            android:textColor="#ff8b7e88" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="URL"
+            android:maxLength="100"
+            android:id="@+id/bookmark_item_url_id"
+            android:layout_marginLeft="10dp"
+            android:textColor="#ff8b7e88"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bookmark_item_time_layout">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Added:"
+            android:id="@+id/bookmark_item_added_time_static_id"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.03"
+            android:textColor="#ff00c400" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Time"
+            android:id="@+id/bookmark_item_added_time_id"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.05"
+            android:textColor="#ff00c400" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.09"
+            android:gravity="right"
+            android:id="@+id/bookmark_item_time_nested_layout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Scheduled:"
+                android:id="@+id/bookmark_item_scheduled_time"
+                android:layout_marginRight="10dp"
+                android:textColor="#ffff0000"
+                android:layout_gravity="left" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/bookmark_item_scheduled_time_id"
+                android:layout_marginRight="10dp"
+                android:textColor="#ffff0000" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
