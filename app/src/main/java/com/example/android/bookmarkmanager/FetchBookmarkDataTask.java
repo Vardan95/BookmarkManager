@@ -31,6 +31,18 @@ public class FetchBookmarkDataTask extends AsyncTask<Void,Void,Void> {
 
     private final String BASE_URL = "http://bkmanager.webege.com/file.json";
 
+    // These are the names of the JSON objects that need to be extracted.
+    final String OWM_CHILDREN = "children";
+    final String OHM_MODIFIED_TIME = "dateGroupModified";
+
+    final String OWM_TITLE = "title";
+    final String OWM_URL = "url";
+    final String OWM_ID = "id";
+    final String OWM_parID = "parentId";
+    final String OWM_index = "index";
+    final String OWM_ADDED_TIME = "dateAdded";
+
+
     private DatabaseHandler dbHandler;
 
     private CategoryListAdapter catAdapter_;
@@ -135,20 +147,7 @@ public class FetchBookmarkDataTask extends AsyncTask<Void,Void,Void> {
     private Void getBookMarkDataFromJson(String forecastJsonStr)
             throws JSONException {
 
-        // These are the names of the JSON objects that need to be extracted.
-        final String OWM_CHILDREN = "children";
-        final String OHM_MODIFIED_TIME = "dateGroupModified";
-
-        final String OWM_TITLE = "title";
-        final String OWM_URL = "url";
-        final String OWM_ID = "id";
-        final String OWM_parID = "parentId";
-        final String OWM_index = "index";
-        final String OWM_ADDED_TIME = "dateAdded";
-
         JSONArray bookmarkJson = new JSONArray(forecastJsonStr);
-
-        ArrayList<SimpleBookmarkCategory> bookMarkData = new ArrayList<>();
 
         for(int i=0 ; i < bookmarkJson.length(); i++)
         {
@@ -160,52 +159,63 @@ public class FetchBookmarkDataTask extends AsyncTask<Void,Void,Void> {
             {
                 JSONObject currentFolder = folders.getJSONObject(j);
 
-                String folderTitle = currentFolder.getString(OWM_TITLE);
-
-                long folderCreationTime = currentFolder.getLong(OWM_ADDED_TIME);
-                long folderModifiedTime = currentFolder.getLong(OHM_MODIFIED_TIME);
-
-                int folderID = Integer.parseInt(currentFolder.getString(OWM_ID));
-                int folderIndex = currentFolder.getInt(OWM_index);
-                int folderParent = Integer.parseInt(currentFolder.getString(OWM_parID));
-
-                SimpleBookmarkCategory catItem = new SimpleBookmarkCategory(folderTitle,
-                                                                            folderCreationTime,
-                                                                            folderModifiedTime,
-                                                                            folderID,
-                                                                            folderIndex,
-                                                                            folderParent);
-
-                JSONArray itemsInFolder = currentFolder.getJSONArray(OWM_CHILDREN);
-
-                for(int h=0; h < itemsInFolder.length(); h++)
-                {
-                    JSONObject bkItem = itemsInFolder.getJSONObject(h);
-
-                    String bkTitle = bkItem.getString(OWM_TITLE);
-
-                    String bkUrl = bkItem.getString(OWM_URL);
-
-                    long bkCreationTime = bkItem.getLong(OWM_ADDED_TIME);
-
-                    int bkID = Integer.parseInt(bkItem.getString(OWM_ID));
-                    int bkIndex = bkItem.getInt(OWM_index);
-                    int bkParent = Integer.parseInt(bkItem.getString(OWM_parID));
-
-                    SimpleBookmarkEntry bkEntry = new SimpleBookmarkEntry(bkUrl,bkTitle,bkCreationTime,bkID,bkIndex,bkParent);
-
-                    bkEntry.setIsScheduled_(true);
-
-                    catItem.addSimpleBookmark(bkEntry);
-
-                    dbHandler.addBookmark(bkEntry);
-                }
-
-                dbHandler.addCategory(catItem);
-                bookMarkData.add(catItem);
+                decodeJSON(currentFolder);
             }
         }
         return null;
+    }
+
+
+    private void decodeJSON(JSONObject currentItem) throws JSONException
+    {
+        String folderTitle = currentItem.getString(OWM_TITLE);
+
+        long folderCreationTime = currentItem.getLong(OWM_ADDED_TIME);
+        long folderModifiedTime = currentItem.getLong(OHM_MODIFIED_TIME);
+
+        int folderID = Integer.parseInt(currentItem.getString(OWM_ID));
+        int folderIndex = currentItem.getInt(OWM_index);
+        int folderParent = Integer.parseInt(currentItem.getString(OWM_parID));
+
+        SimpleBookmarkCategory catItem = new SimpleBookmarkCategory(folderTitle,
+                folderCreationTime,
+                folderModifiedTime,
+                folderID,
+                folderIndex,
+                folderParent);
+
+        JSONArray itemsInFolder = currentItem.getJSONArray(OWM_CHILDREN);
+
+        for(int h=0; h < itemsInFolder.length(); h++)
+        {
+            JSONObject bkItem = itemsInFolder.getJSONObject(h);
+
+            if(!bkItem.has(OWM_URL))
+            {
+                decodeJSON(bkItem);
+                continue;
+            }
+
+            String bkTitle = bkItem.getString(OWM_TITLE);
+
+            String bkUrl = bkItem.getString(OWM_URL);
+
+            long bkCreationTime = bkItem.getLong(OWM_ADDED_TIME);
+
+            int bkID = Integer.parseInt(bkItem.getString(OWM_ID));
+            int bkIndex = bkItem.getInt(OWM_index);
+            int bkParent = Integer.parseInt(bkItem.getString(OWM_parID));
+
+            SimpleBookmarkEntry bkEntry = new SimpleBookmarkEntry(bkUrl,bkTitle,bkCreationTime,bkID,bkIndex,bkParent);
+
+            bkEntry.setIsScheduled_(true);
+
+            catItem.addSimpleBookmark(bkEntry);
+
+            dbHandler.addBookmark(bkEntry);
+        }
+
+        dbHandler.addCategory(catItem);
     }
 
     @Override
