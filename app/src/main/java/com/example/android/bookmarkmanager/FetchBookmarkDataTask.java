@@ -1,5 +1,7 @@
 package com.example.android.bookmarkmanager;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.format.Time;
@@ -32,6 +34,10 @@ public class FetchBookmarkDataTask extends AsyncTask<Void,Void,Void> {
     private DatabaseHandler dbHandler;
 
     private CategoryListAdapter catAdapter_;
+
+    private ProgressDialog progressDialog_;
+
+    private Activity loaderActivity_;
 
     @Override
     protected Void doInBackground(Void... params) {
@@ -203,10 +209,28 @@ public class FetchBookmarkDataTask extends AsyncTask<Void,Void,Void> {
     }
 
     @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        if(loaderActivity_ != null) {
+            progressDialog_ = new ProgressDialog(loaderActivity_);
+            progressDialog_.setIcon(R.mipmap.ic_launcher);
+            progressDialog_.setTitle("Updating");
+            progressDialog_.show();
+        }
+    }
+
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        super.onProgressUpdate(values);
+    }
+
+    @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
-        catAdapter_.setNewData(dbHandler.getAllCategories());
+        progressDialog_.dismiss();
+        if (!isCancelled()) {
+            catAdapter_.setNewData(dbHandler.getAllCategories());
+        }
     }
 
     public void setDatabaseHandler(DatabaseHandler dbHandler) {
@@ -228,5 +252,9 @@ public class FetchBookmarkDataTask extends AsyncTask<Void,Void,Void> {
 
     public void setCatAdapter(CategoryListAdapter catAdapter_) {
         this.catAdapter_ = catAdapter_;
+    }
+
+    public void setLoaderActivity(Activity loaderActivity_) {
+        this.loaderActivity_ = loaderActivity_;
     }
 }

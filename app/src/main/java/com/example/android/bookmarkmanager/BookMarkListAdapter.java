@@ -5,6 +5,7 @@ package com.example.android.bookmarkmanager;
  */
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,9 @@ public class BookMarkListAdapter extends BaseAdapter {
             title_text.setText(values_.get(position).getTitle_());
 
             TextView url_text = (TextView) vi.findViewById(R.id.bookmark_item_url_id);
-            url_text.setText(values_.get(position).getUrl_());
+            Uri newUri = Uri.parse(values_.get(position).getUrl_());
+
+            url_text.setText(newUri.getScheme() + "://" + newUri.getHost());
 
             TextView added_time_text = (TextView) vi.findViewById(R.id.bookmark_item_added_time_id);
             added_time_text.setText(TimeUtils.getReadableDateString(values_.get(position).getTime_()));

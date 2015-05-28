@@ -1,6 +1,8 @@
 package com.example.android.bookmarkmanager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
@@ -110,6 +112,16 @@ public class MainActivity extends ActionBarActivity {
 
         list_adapter = new CategoryListAdapter(this,categories_);
 
+        list_adapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                if(categories_.isEmpty())
+                {
+                    categories_.addAll(db.getAllCategories());
+                }
+            }
+        });
+
         cat_list.setAdapter(list_adapter);
         list_adapter.notifyDataSetChanged();
 
@@ -143,6 +155,7 @@ public class MainActivity extends ActionBarActivity {
             FetchBookmarkDataTask task = new FetchBookmarkDataTask();
             task.setDatabaseHandler(db);
             task.setCatAdapter(list_adapter);
+            task.setLoaderActivity(this);
             task.execute();
 
             list_adapter.setNewData(db.getAllCategories());

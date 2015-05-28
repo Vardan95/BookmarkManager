@@ -8,6 +8,7 @@ import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +38,8 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(DatabaseHandler.KEY_TITLE,title_);
-        outState.putString(DatabaseHandler.KEY_URL,url_);
+        outState.putString(DatabaseHandler.KEY_TITLE, title_);
+        outState.putString(DatabaseHandler.KEY_URL, url_);
         outState.putLong(DatabaseHandler.KEY_ADDED_TIME, added_time_);
         outState.putBoolean(DatabaseHandler.KEY_IS_SCHEDULED, isScheduled_);
         outState.putInt(DatabaseHandler.KEY_PRIORITY, priority_);
@@ -53,14 +54,13 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
 
         newPriority_ = -100;//Just negative value to avoid mess
 
+        isDirty_ = false;
+
         Bundle data;
 
-        if(savedInstanceState == null)
-        {
+        if (savedInstanceState == null) {
             data = getActivity().getIntent().getExtras();
-        }
-        else
-        {
+        } else {
             data = savedInstanceState;
         }
 
@@ -108,8 +108,9 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
 
                 newIsScheduled_ = isChecked;
 
-                if(isChecked)
-                {
+                isDirty_ = true;
+
+                if (isChecked) {
                     prioritySpinnerView_.setEnabled(true);
                     changeDataButton_.setEnabled(true);
                     changeTimeButton_.setEnabled(true);
@@ -118,9 +119,7 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
                     priorityStaticTextView_.setEnabled(true);
                     shDayStaticTextView_.setEnabled(true);
                     shTimeStaticTextView_.setEnabled(true);
-                }
-                else
-                {
+                } else {
                     prioritySpinnerView_.setEnabled(false);
                     changeDataButton_.setEnabled(false);
                     changeTimeButton_.setEnabled(false);
@@ -135,7 +134,9 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
 
         prioritySpinnerView_ = (Spinner) view.findViewById(R.id.bookmark_details_priority);
 
-        priorityAdapter_ =  new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,BookmarkPriority.getPriorityStrings());
+        ArrayList<String> priorityStrings =  BookmarkPriority.getPriorityStrings();
+
+        priorityAdapter_ = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, priorityStrings);
 
         ((ArrayAdapter<String>) priorityAdapter_).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -143,7 +144,9 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
 
         ((ArrayAdapter<String>) priorityAdapter_).notifyDataSetChanged();
 
-        prioritySpinnerView_.setSelection(priority_);
+        int priorityPos = priorityStrings.indexOf(BookmarkPriority.getPriorityString(priority_));
+
+        prioritySpinnerView_.setSelection(priorityPos);
 
         prioritySpinnerView_.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -162,6 +165,10 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
                         break;
                     }
                 }
+
+                if (newPriority_ != priority_) {
+                    isDirty_ = true;
+                }
             }
 
             @Override
@@ -176,8 +183,8 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
         calendar = new GregorianCalendar();
         calendar.setTimeInMillis(scheduled_time);
 
-        dataPickerDialog_ = new DatePickerDialog(getActivity(),this,calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        timePickerDialog_ = new TimePickerDialog(getActivity(),this,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), DateFormat.is24HourFormat(getActivity()));
+        dataPickerDialog_ = new DatePickerDialog(getActivity(), this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        timePickerDialog_ = new TimePickerDialog(getActivity(), this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), DateFormat.is24HourFormat(getActivity()));
 
         scheduledTimeTextView_ = (TextView) view.findViewById(R.id.bookmark_details_sch_time);
         scheduledTimeTextView_.setText(TimeUtils.getReadableTimeString(scheduled_time));
@@ -208,26 +215,23 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
 
                 DatabaseHandler db = new DatabaseHandler(getActivity());
 
-                if(newIsScheduled_ != isScheduled_) {
+                if (newIsScheduled_ != isScheduled_) {
                     db.updateBookmarkEntry(added_time_, isScheduledCheckBox_.isChecked());
                 }
 
-                if(newPriority_ != priority_)
-                {
-                    db.updateBookmarkEntry(added_time_,(byte)newPriority_);
+                if (newPriority_ != priority_) {
+                    db.updateBookmarkEntry(added_time_, (byte) newPriority_);
                 }
 
-                if(newScheduleTime_ != scheduled_time)
-                {
-                    db.updateBookmarkEntry(added_time_,newScheduleTime_);
+                if (newScheduleTime_ != scheduled_time) {
+                    db.updateBookmarkEntry(added_time_, newScheduleTime_);
                 }
 
                 getActivity().finish();
             }
         });
 
-        if(isScheduled_)
-        {
+        if (isScheduled_) {
             isScheduledCheckBox_.setChecked(true);
             prioritySpinnerView_.setEnabled(true);
             changeDataButton_.setEnabled(true);
@@ -237,9 +241,7 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
             priorityStaticTextView_.setEnabled(true);
             shDayStaticTextView_.setEnabled(true);
             shTimeStaticTextView_.setEnabled(true);
-        }
-        else
-        {
+        } else {
             isScheduledCheckBox_.setChecked(false);
             prioritySpinnerView_.setEnabled(false);
             changeDataButton_.setEnabled(false);
@@ -254,12 +256,22 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
         return view;
     }
 
+
+    public void onBackButton()
+    {
+        if(isDirty_)
+        {
+            //TODO implement
+        }
+    }
+
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
         calendar.set(Calendar.MINUTE,minute);
         newScheduleTime_ = calendar.getTimeInMillis();
         scheduledTimeTextView_.setText(TimeUtils.getReadableTimeString(newScheduleTime_));
+        isDirty_ = true;
     }
 
     @Override
@@ -269,6 +281,7 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
         calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
         newScheduleTime_ = calendar.getTimeInMillis();
         scheduledDateTextView_.setText(TimeUtils.getReadableDateString(newScheduleTime_));
+        isDirty_ = true;
     }
 
     //Data members
@@ -282,6 +295,8 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
     private int newPriority_;
     private boolean newIsScheduled_;
     private long newScheduleTime_;
+
+    private boolean isDirty_;
 
 
     //View members
