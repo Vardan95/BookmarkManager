@@ -1,10 +1,12 @@
 package com.example.android.bookmarkmanager;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -60,18 +62,23 @@ public class CategoryListAdapter extends BaseAdapter {
 
         View vi = convertView;
         if (vi == null)
-            vi = inflater.inflate(R.layout.bookmarkcategorylistitem, null);
+            vi = inflater.inflate(R.layout.category_grid_view_item, null);
 
         if (position != -1 ) {
 
-            TextView title_text = (TextView) vi.findViewById(R.id.category_list_item_title_id);
+            TextView title_text = (TextView) vi.findViewById(R.id.category_item_folder_text);
             title_text.setText(values_.get(position).getTitle_());
 
-            TextView added_time_text = (TextView) vi.findViewById(R.id.category_list_item_added_time_txt);
-            added_time_text.setText(TimeUtils.getReadableDateString(values_.get(position).getTimeAdded_()));
+            ImageView imageView = (ImageView) vi.findViewById(R.id.category_item_folder_Image);
 
-            TextView mod_time_text = (TextView) vi.findViewById(R.id.category_list_item_mod_time_txt);
-            mod_time_text.setText(TimeUtils.getReadableDateString(values_.get(position).getTimeModified_()));
+            if(values_.get(position).isEmpty())
+            {
+                imageView.setImageResource(R.drawable.open_empty_folder_icon);
+            }
+            else
+            {
+                imageView.setImageResource(R.drawable.opened_full_folder_icon);
+            }
         }
         return vi;
     }

@@ -7,45 +7,58 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:id="@+id/category_view_layout">
 
-        <ListView
+        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/gridview"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/category_list_view"
-            android:layout_below="@+id/bookmark_details_title"
-            android:layout_centerHorizontal="true"
-            android:choiceMode="singleChoice" />
+            android:layout_height="match_parent"
+            android:columnWidth="90dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"
+            />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1">
+        android:layout_height="match_parent"
+        android:id="@+id/explorer_button_layout">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sort By"
-            android:id="@+id/button" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.4">
-
-        <ListView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/bookmark_list"
-            android:layout_alignTop="@+id/category_list_view"
-            android:layout_toRightOf="@+id/bookmark_details_title"
-            android:layout_toEndOf="@+id/bookmark_details_title"
-            android:layout_weight="0.5" />
+            android:gravity="center_vertical|center_horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Collapse"
+                android:id="@+id/explorer_button"
+                android:drawableLeft="@drawable/collapse_folder_icon" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:id="@+id/bookmark_view_layout">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bookmark_list"
+                android:layout_alignTop="@+id/category_list_view"
+                android:layout_toRightOf="@+id/bookmark_details_title"
+                android:layout_toEndOf="@+id/bookmark_details_title"
+                android:layout_weight="0.5" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

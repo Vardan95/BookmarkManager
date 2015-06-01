@@ -15,7 +15,7 @@ public class SimpleBookmarkEntry {
         parentId_ = newParentId;
 
         priority_ = BookmarkPriority.NORM_PRIOR;
-        scheduleTime_ = TimeScheduleManager.getDefaultScheduleTime();
+        scheduleTime_ = TimeScheduleManager.getDefaultScheduleTime(priority_);
         isScheduled_ = false;
     }
 
@@ -59,8 +59,9 @@ public class SimpleBookmarkEntry {
         this.parentId_ = parentId_;
     }
 
-    public void setPriority(byte priority_) {
+    public void setPriority(int priority_) {
         this.priority_ = priority_;
+        scheduleTime_ = TimeScheduleManager.getDefaultScheduleTime(priority_);
     }
 
     public void setScheduleTime(long scheduleTime_) {
@@ -96,7 +97,7 @@ public class SimpleBookmarkEntry {
         return parentId_;
     }
 
-    public byte getPriority() {
+    public int getPriority() {
         return priority_;
     }
 
@@ -114,7 +115,7 @@ public class SimpleBookmarkEntry {
     private int id_;
     private int indexInFolder_;
     private int parentId_;
-    private byte priority_;
+    private int priority_;
     private long scheduleTime_;
     private boolean isScheduled_;
 }

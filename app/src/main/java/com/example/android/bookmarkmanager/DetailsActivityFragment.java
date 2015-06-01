@@ -167,6 +167,9 @@ public class DetailsActivityFragment extends Fragment implements TimePickerDialo
                 }
 
                 if (newPriority_ != priority_) {
+                    newScheduleTime_ = TimeScheduleManager.getDefaultScheduleTime(newPriority_);
+                    scheduledDateTextView_.setText(TimeUtils.getReadableDateString(newScheduleTime_));
+                    scheduledTimeTextView_.setText(TimeUtils.getReadableTimeString(newScheduleTime_));
                     isDirty_ = true;
                 }
             }

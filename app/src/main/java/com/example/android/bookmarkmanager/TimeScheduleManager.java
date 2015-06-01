@@ -8,7 +8,7 @@ import android.text.format.Time;
  */
 public class TimeScheduleManager {
 
-    static long getDefaultScheduleTime()
+    static long getDefaultScheduleTime(int priority)
     {
         Time dayTime = new Time();
         dayTime.setToNow();
@@ -16,11 +16,34 @@ public class TimeScheduleManager {
         int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
 
         long dateTime;
-        // Cheating to convert this to UTC time, which is what we want anyhow
-        dateTime = dayTime.setJulianDay(julianStartDay+DAY_COUNT);
 
+        switch (priority) {
+            case BookmarkPriority.HIGH_PRIOR:
+            {
+                dateTime = dayTime.setJulianDay(julianStartDay+DAY_COUNT_FOR_HIGH_PRIORITY);
+                break;
+            }
+            case BookmarkPriority.NORM_PRIOR:
+            {
+                dateTime = dayTime.setJulianDay(julianStartDay+DAY_COUNT_FOR_MEDIUM_PRIORITY);
+                break;
+            }
+            case BookmarkPriority.LOW_PRIOR:
+            {
+                dateTime = dayTime.setJulianDay(julianStartDay+DAY_COUNT_FOR_LOW_PRIORITY);
+                break;
+            }
+            default:
+            {
+                dateTime = dayTime.setJulianDay(julianStartDay+DAY_COUNT_FOR_DEFAULT_PRIORITY);
+                break;
+            }
+        }
         return dateTime;
     }
 
-    private static final int DAY_COUNT = 4;
+    private static final int DAY_COUNT_FOR_LOW_PRIORITY = 6;
+    private static final int DAY_COUNT_FOR_MEDIUM_PRIORITY = 4;
+    private static final int DAY_COUNT_FOR_HIGH_PRIORITY = 2;
+    private static final int DAY_COUNT_FOR_DEFAULT_PRIORITY = 5;
 }

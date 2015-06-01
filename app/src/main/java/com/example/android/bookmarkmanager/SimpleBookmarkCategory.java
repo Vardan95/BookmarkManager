@@ -17,6 +17,8 @@ public class SimpleBookmarkCategory {
         timeAdded_ = newTime;
         timeModified_ = newModTime;
 
+        isEmpty_ = true;
+
         bookmarks_ = new HashMap<>();
     }
 
@@ -28,6 +30,7 @@ public class SimpleBookmarkCategory {
         index_ = newCategory.getIndex_();
         timeAdded_ = newCategory.getTimeAdded_();
         timeModified_ = newCategory.getTimeModified_();
+        isEmpty_ = newCategory.isEmpty();
 
         if(bookmarks_ == null)
         {
@@ -60,7 +63,8 @@ public class SimpleBookmarkCategory {
         if(!bookmarks_.containsKey(itemId))
         {
             SimpleBookmarkEntry item = new SimpleBookmarkEntry(newEntry);
-            bookmarks_.put(itemId,item);
+            bookmarks_.put(itemId, item);
+            isEmpty_ = false;
             return true;
         }
 
@@ -92,12 +96,18 @@ public class SimpleBookmarkCategory {
     }
 
 
+    public void setIsEmpty(boolean isEmpty_) {
+        this.isEmpty_ = isEmpty_;
+    }
+
+
     private String title_;
     private int parentId_;
     private int id_;
     private int index_;
     private long timeAdded_;
     private long timeModified_;
+    private boolean isEmpty_;
 
     Map<Integer,SimpleBookmarkEntry> bookmarks_;
 
@@ -123,5 +133,9 @@ public class SimpleBookmarkCategory {
 
     public long getTimeModified_() {
         return timeModified_;
+    }
+
+    public boolean isEmpty() {
+        return isEmpty_;
     }
 }
